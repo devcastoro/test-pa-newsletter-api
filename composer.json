@@ -1,8 +1,8 @@
 {
-  "name": "pensiero/docker-symfony-skeleton",
+  "name": "devcastoro/test-pa-newsletter-api",
   "type": "project",
   "license": "MIT",
-  "description": "Docker setup for a minimal Symfony project",
+  "description": "Newsletter double opt in via API (Symfony)",
   "require": {
     "php": "^7.1.3",
     "ext-iconv": "*",
