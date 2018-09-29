@@ -17,7 +17,7 @@ services:
 
   web:
     build:
-      context: .
+      context: symfony/4.0
       dockerfile: config/docker/web/prod/Dockerfile
     depends_on:
       - mysql

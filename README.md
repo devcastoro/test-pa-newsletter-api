@@ -1,51 +1,90 @@
-Docker Skeletons
-================
+Symfony 4.0 skeleton
+====================
 
-> **WORK IN PROGRESS**: take a look at the [roadmap](https://github.com/pensiero/docker-skeletons/issues/2).
+This skeleton is based on the official [Symfony 4.0 skeleton](https://github.com/symfony/skeleton/blob/4.0/composer.json).
 
-Init with a single line of code your favourite framework thanks to **Docker**.
+Features:
+- web container with PHP-FPM 7.2
+- nginx reverse proxy
+- mysql database
+- phpMyAdmin
 
-Every skeleton has an independent Docker configuration, with multiple `Dockerfile` and `docker-compose.yml` files.
-
-Read more about Docker and the amazing docker-compose in the [official docs](https://docs.docker.com/get-started/). 
-
+Get started with Symfony, read the [official docs](https://symfony.com/doc/current/setup.html).
 
 # Setup
 
-> NOTE: setup instructions may differ from project to project. Check the *README* of each skeleton.
+First time run:
 
-If nothing particular is specified in the README of the skeleton, simply run:
+```bash
+./setup.sh start
+```
+
+After first setup you can use `docker-composer` to manage your containers.
+
+# Live in your browser
+
+Be sure that the every the `www.symfony.dev` and `phpmyadmin.symfony.dev` point to `127.0.0.1`.
+
+You could point every `.dev` domain to `127.0.0.1` (more about it in the main README of the project), or add in your `hosts` file the following lines:
 
 ```
+127.0.0.1 www.symfony.dev phpmyadmin.symfony.dev
+```
+
+Finally, go to www.symfony.dev.
+
+## PhpMyAdmin
+
+For convenience, we ship this skeleton with a Mysql web GUI, PhpMyAdmin.
+
+Go to phpmyadmin.symfony.dev, user `root`, password `secret`.
+
+# What's happening
+
+Every container configs is stored in the `config/` folder.
+
+- `nginx-proxy` act as a reverse proxy in order to map the domain `www.symfony.dev` over the container `nginx`
+- `nginx` is the web server
+- `web` contains the php application, *dev* and *prod* environments are separated
+- `mysql` contains the database
+- `phpmyadmin` is a web gui for people who wants to quickly wander through the database
+
+# Info
+
+### Database credentials
+
+- Host: `mysql` (name of the container in the `docker-compose.yml` file)
+- User: `root`
+- Password: `secret`
+
+### Env variables
+
+All the variables are stored into the `.env` file, a not versioned copy of the `.env.dist`.
+If you change one of them, remember to restart the web container.
+
+Easy way (but not the best):
+```
+docker-compose down && docker-compose up -d
+```
+
+### Helpful docker-compose commands
+
+Status
+```bash
+docker-compose ps
+```
+
+Start all the containers
+```bash
 docker-compose up -d
 ```
 
-# Caveats
-
-### `.dev` domains to localhost
-
-It's suggested to point every `.dev` domains to `127.0.0.1` (in your `hosts` file).
-Otherwise you could manually add the domains of your interest; for example, if you are running the Symfony skeleton, you need to add:
-```
-127.0.0.1 www.symfony.dev
-```
-in your `hosts` file.
-
-If you are working with OSX, you could use *dnsmasq*, Thomas Sutton posted and [handful how-to](https://passingcuriosity.com/2013/dnsmasq-dev-osx/).
-
-
-### Chrome, `.dev` domains and `https`
-
-Unfortunatly Chrome doesn't like local development with `.dev` domains that use `https`. But I do.
-
-So when you will face the "Unauthorized screen", simply type:
-```
-badidea
+Stop your containers
+```bash
+docker-compose down
 ```
 
-### Production-ready
-
-Every skeleton ships with a `docker-compose.override.yml.dist` file. Why? Because your local environment could
-(and usually is) different from the production environment.
-
-During the setup phase, the `docker-compose.override.yml.dist` file is copied into a not versioned `docker-compose.override.yml` file (along with other files).
+Enter inside the `web` container (where the main application is located)
+```bash
+docker-compose exec web bash
+```
