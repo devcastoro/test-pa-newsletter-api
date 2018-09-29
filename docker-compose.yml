@@ -22,7 +22,7 @@ services:
     depends_on:
       - mysql
     labels:
-      - "com.spotistats.web"
+      - "com.symfony.web"
 
   nginx:
     build:
