@@ -63,7 +63,6 @@ class SubscriberDbManager {
             $this->em->persist($subscriber);
             $this->em->flush();
 
-            // todo: send a final confirmation email
             return $subscriber;
         }
         else{

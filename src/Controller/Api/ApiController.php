@@ -75,7 +75,7 @@ class ApiController extends Controller {
             // check check status and token
             $confirmationSubscriber = $this->subscriberManager->confirmSubscriber($email,$token);
 
-            // send end process email
+            // send a final confirmation email
             $this->emailManager->confirmedSubscriberEmail($confirmationSubscriber->getMail());
 
             return $this->json([
