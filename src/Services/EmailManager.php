@@ -2,14 +2,11 @@
 
 namespace App\Services;
 
-
-
 class EmailManager {
 
 
     public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig_Environment)
     {
-
         $this->mailer = $mailer;
         $this->twig = $twig_Environment;
     }
@@ -50,7 +47,6 @@ class EmailManager {
         $this->mailer->send($message);
 
     }
-
 
 }
 
