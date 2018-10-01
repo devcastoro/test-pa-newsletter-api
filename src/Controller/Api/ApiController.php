@@ -38,14 +38,14 @@ class ApiController extends Controller {
             // validate email
             $this->emailValidatorController->emailValidation($email);
 
-            // register the new email in DB
+            // register the new email in DB and get token. Return an array with current user + temporany token for confirmation
             $userRecord = $this->subscriberManager->saveNewSubscriber($email);
 
             // send email confirmation
-            $this->emailManager->sendConfirmationEmail($userRecord->getMail(),$userRecord->getToken());
+            $this->emailManager->sendConfirmationEmail($userRecord["subscriber"]->getMail(),$userRecord["token"]);
 
             return $this->json([
-                "mail"   => $userRecord->getMail(),
+                "mail"   => $userRecord["subscriber"]->getMail(),
                 "status" => "NotConfirmedRegistration",
             ],200);
 
@@ -59,6 +59,7 @@ class ApiController extends Controller {
      * confirm a subscriber Email
      *
      * @FOSRest\Get("/confirmEmail")
+     *
      * @param string $email
      * @param string $token
      *
@@ -73,7 +74,7 @@ class ApiController extends Controller {
             $this->emailValidatorController->emailFormatValidation($email);
 
             // check check status and token
-            $confirmationSubscriber = $this->subscriberManager->confirmSubscriber($email,$token);
+            $confirmationSubscriber = $this->subscriberManager->confirmSubscriber($email, $token);
 
             // send a final confirmation email
             $this->emailManager->confirmedSubscriberEmail($confirmationSubscriber->getMail());

@@ -27,11 +27,6 @@ class Emails
     private $Status;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $token;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $date;
@@ -61,18 +56,6 @@ class Emails
     public function setStatus(bool $Status): self
     {
         $this->Status = $Status;
-
-        return $this;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(string $token): self
-    {
-        $this->token = $token;
 
         return $this;
     }

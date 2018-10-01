@@ -22,8 +22,7 @@ class SubscriberDbManager {
      */
     public function saveNewSubscriber($emailAddress)
     {
-        //todo eliminate token from db
-        // set registerDateTime and set a token based on datetime + email address
+        // set registerDateTime and set a temporany token based on datetime + email address
         $currentDateTime = new \DateTime();
         $token = md5($currentDateTime->format('Y-m-d H:i:s').$emailAddress);
 
@@ -31,16 +30,21 @@ class SubscriberDbManager {
         $subscriber->setMail($emailAddress);
         $subscriber->setStatus(false);
         $subscriber->setDate($currentDateTime);
-        $subscriber->setToken($token);
 
         $this->em->persist($subscriber);
         $this->em->flush();
 
-        return $subscriber;
+        return array(
+            "subscriber" => $subscriber,
+            "token" => $token,
+        );
     }
 
     /**
      * switch subscriber status from NOT CONFIRMED to CONFIRMED
+     *
+     * @param string $email
+     * @param string $token
      *
      * @return array
      */
@@ -50,8 +54,10 @@ class SubscriberDbManager {
         $subscriber = $this->em->getRepository(Emails::class)->findOneBy(["mail" => $email]);
 
         // check the token
-        // todo: consider to generate the REAL token here not to get from DB,
-        if ($subscriber->getToken() == $token) {
+        $currentDateTime = $subscriber->getDate();
+        $realSubscriberToken = md5($currentDateTime->format('Y-m-d H:i:s').$email);
+
+        if ($realSubscriberToken == $token) {
 
             // check if already confirmed
             if ($subscriber->getStatus() == true) {
