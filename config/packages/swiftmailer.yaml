@@ -1,0 +1,4 @@
+swiftmailer:
+    transport: gmail
+    username:  '%env(resolve:MAILER_USERNAME)%'
+    password:  '%env(resolve:MAILER_PASS)%'
