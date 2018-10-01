@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Controller\EmailValidatorController;
+use App\Services\EmailManager;
 use App\Services\SubscriberDbManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,10 +15,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller {
 
-    public function __construct(EmailValidatorController $emailValidatorController, SubscriberDbManager $subscriberDbManager)
+    public function __construct(EmailValidatorController $emailValidatorController, SubscriberDbManager $subscriberDbManager, EmailManager $emailManager)
     {
         $this->emailValidatorController = $emailValidatorController;
         $this->subscriberManager = $subscriberDbManager;
+        $this->emailManager = $emailManager;
     }
 
     /**
@@ -40,7 +42,7 @@ class ApiController extends Controller {
             $userRecord = $this->subscriberManager->saveNewSubscriber($email);
 
             // todo Send a confirmation email with email+token
-
+            //$this->emailManager->sendConfirmationEmail($userRecord->getMail(),$userRecord->getToken());
 
             return $this->json([
                 "mail"   => $userRecord->getMail(),
@@ -53,8 +55,37 @@ class ApiController extends Controller {
         }
 
 
-
     }
 
+    /**
+     * confirm a email
+     *
+     * @FOSRest\Get("/confirmEmail")
+     * @param string $email
+     * @param string $token
+     *
+     */
+    public function confirmEmail(Request $request)
+    {
+        $email = $request->query->get('email');
+        $token = $request->query->get('token');
+
+        try {
+            // validate email (check if is valid format and if exist
+            $this->emailValidatorController->emailFormatValidation($email);
+
+            // check check status and token
+            $confirmationSubscriber = $this->subscriberManager->confirmSubscriber($email,$token);
+
+            return $this->json([
+                "mail"   => $confirmationSubscriber->getMail(),
+                "status" => $confirmationSubscriber->getStatus(),
+            ],200);
+
+        } catch (Exception $e) {
+
+            return $this->json(["Error" => $e->getMessage()],400);
+        }
+    }
 }
 
