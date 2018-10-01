@@ -2,7 +2,7 @@
 
 namespace App\Controller\Api;
 
-use App\Controller\ValidatorController;
+use App\Controller\EmailValidatorController;
 use App\Services\SubscriberDbManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -14,9 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller {
 
-    public function __construct(ValidatorController $validatorController, SubscriberDbManager $subscriberDbManager)
+    public function __construct(EmailValidatorController $emailValidatorController, SubscriberDbManager $subscriberDbManager)
     {
-        $this->validatorController = $validatorController;
+        $this->emailValidatorController = $emailValidatorController;
         $this->subscriberManager = $subscriberDbManager;
     }
 
@@ -34,7 +34,7 @@ class ApiController extends Controller {
 
         try {
             // validate email
-            $this->validatorController->emailValidation($email);
+            $this->emailValidatorController->emailValidation($email);
 
             // register the new email in DB
             $userRecord = $this->subscriberManager->saveNewSubscriber($email);

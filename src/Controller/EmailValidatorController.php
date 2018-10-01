@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ValidatorController extends AbstractController
+class EmailValidatorController extends AbstractController
 {
 
     private $em;
