@@ -40,10 +40,14 @@ class EmailManager {
      * send the last email to new user that confirm the status
      *
      */
-    public function sendEndProcessEmail($emailAddress)
+    public function confirmedSubscriberEmail($emailAddress)
     {
+        $message = (new \Swift_Message('Email Confirmed' ))
+            ->setFrom(getenv('MAILER_FROM'))
+            ->setTo($emailAddress)
+            ->setBody($this->twig->render('/confirmedEmailTemplate.html.twig'),'text/html');
 
-
+        $this->mailer->send($message);
 
     }
 

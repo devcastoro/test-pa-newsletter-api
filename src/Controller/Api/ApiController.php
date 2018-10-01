@@ -41,7 +41,7 @@ class ApiController extends Controller {
             // register the new email in DB
             $userRecord = $this->subscriberManager->saveNewSubscriber($email);
 
-            // todo Send a confirmation email with email+token
+            // send email confirmation
             $this->emailManager->sendConfirmationEmail($userRecord->getMail(),$userRecord->getToken());
 
             return $this->json([
@@ -53,12 +53,10 @@ class ApiController extends Controller {
 
             return $this->json(["Error" => $e->getMessage()],400);
         }
-
-
     }
 
     /**
-     * confirm a email
+     * confirm a subscriber Email
      *
      * @FOSRest\Get("/confirmEmail")
      * @param string $email
@@ -77,6 +75,9 @@ class ApiController extends Controller {
             // check check status and token
             $confirmationSubscriber = $this->subscriberManager->confirmSubscriber($email,$token);
 
+            // send end process email
+            $this->emailManager->confirmedSubscriberEmail($confirmationSubscriber->getMail());
+
             return $this->json([
                 "mail"   => $confirmationSubscriber->getMail(),
                 "status" => $confirmationSubscriber->getStatus(),
@@ -87,5 +88,6 @@ class ApiController extends Controller {
             return $this->json(["Error" => $e->getMessage()],400);
         }
     }
+
 }
 
