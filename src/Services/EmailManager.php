@@ -12,7 +12,7 @@ class EmailManager {
     }
 
     /**
-     * send a confirmation email to new user
+     * send a mail to a new subscriber with a link for confirmation
      *
      */
     public function sendConfirmationEmail($emailAddress,$token)
@@ -20,6 +20,14 @@ class EmailManager {
 
     }
 
+    /**
+     * send the last email to new user that confirm the status
+     *
+     */
+    public function sendEndProcessEmail($emailAddress)
+    {
+
+    }
 
 
 }
