@@ -2,6 +2,8 @@
 
 namespace App\Controller\Api;
 
+use App\Controller\ValidatorController;
+use App\Services\SubscriberDbManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FOS\RestBundle\Controller\Annotations as FOSRest;
@@ -12,11 +14,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller {
 
-    private $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ValidatorController $validatorController, SubscriberDbManager $subscriberDbManager)
     {
-        $this->em = $em;
+        $this->validatorController = $validatorController;
+        $this->subscriberManager = $subscriberDbManager;
     }
 
     /**
@@ -31,21 +32,29 @@ class ApiController extends Controller {
         // get and validate input parameters
         $email = $request->get('email');
 
-        // todo: validation phase (check if: is a mail, is a new subscriber, ...)
+        try {
+            // validate email
+            $this->validatorController->emailValidation($email);
 
-        // todo: if the validation phase is OK.
-            // todo Save in DB
+            // register the new email in DB
+            $userRecord = $this->subscriberManager->saveNewSubscriber($email);
+
             // todo Send a confirmation email with email+token
 
 
-        return $this->json([
-            "email"   => $email
-        ],200);
+            return $this->json([
+                "mail"   => $userRecord->getMail(),
+                "status" => "NotConfirmedRegistration",
+            ],200);
+
+        } catch (Exception $e) {
+
+            return $this->json(["Error" => $e->getMessage()],400);
+        }
+
+
 
     }
-
-
-
 
 }
 
