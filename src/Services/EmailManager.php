@@ -7,17 +7,33 @@ namespace App\Services;
 class EmailManager {
 
 
-    public function __construct()
+    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig_Environment)
     {
+
+        $this->mailer = $mailer;
+        $this->twig = $twig_Environment;
     }
 
     /**
-     * send a mail to a new subscriber with a link for confirmation
+     * build a confirmation link and send a mail to a new subscriber
      *
      */
     public function sendConfirmationEmail($emailAddress,$token)
     {
 
+        $confirmationLink = getenv('WEBSITE_URL')."confirmEmail?email=".$emailAddress."&token=".$token;
+
+        $message = (new \Swift_Message('Confirmation email' ))
+            ->setFrom(getenv('MAILER_FROM'))
+            ->setTo($emailAddress)
+            ->setBody(
+                $this->twig->render('/emailTemplate.html.twig',
+                    array('confirmationLink' => $confirmationLink,
+                    )),
+                'text/html'
+            );
+
+        $this->mailer->send($message);
     }
 
     /**
@@ -26,6 +42,8 @@ class EmailManager {
      */
     public function sendEndProcessEmail($emailAddress)
     {
+
+
 
     }
 

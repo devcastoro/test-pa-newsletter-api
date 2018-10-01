@@ -25,7 +25,7 @@ class ApiController extends Controller {
     /**
      * get new email/subscriber and, after a validation, save it into DB and send a confirmation email
      *
-     * @FOSRest\Post("/subscribe-new-email")
+     * @FOSRest\Post("/newSubscriber")
      *
      * @return array
      */
@@ -42,7 +42,7 @@ class ApiController extends Controller {
             $userRecord = $this->subscriberManager->saveNewSubscriber($email);
 
             // todo Send a confirmation email with email+token
-            //$this->emailManager->sendConfirmationEmail($userRecord->getMail(),$userRecord->getToken());
+            $this->emailManager->sendConfirmationEmail($userRecord->getMail(),$userRecord->getToken());
 
             return $this->json([
                 "mail"   => $userRecord->getMail(),
