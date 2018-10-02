@@ -33,7 +33,7 @@ Setup
 
     ```docker-compose exec web bash```
 
-- And install the composer!
+- And install composer!
 
     ```composer install```
 
@@ -55,33 +55,33 @@ Setup
 
 **POST**
 
-- Post a new newsletter subscriber `POST /newSubscriber` with a valid email address as `email` query parameter
+- Post a new newsletter's subscriber `POST /newSubscriber` with a valid email address as `email` query parameter
 
     **Validation**
-    - [**EmailValidatorController->emailFormatValidation()**] Check email format validation
-    - [**EmailValidatorController->emailRecordValidation()**] Check if the email address is already registered)
-        - Return an specific error message if the validation process return errors
+    - [**EmailValidatorController->emailFormatValidation()**] Check email format 
+    - [**EmailValidatorController->emailRecordValidation()**] Check if already registered in DB
+        - Return an specific message if the validation process return errors
 
     **User DB Record**
-    - [**SubscriberDbManager->saveNewSubscriber()**] Save a new email address in DB with ``status (confirmation) = false``
+    - [**SubscriberDbManager->saveNewSubscriber()**] Save a new email address in DB with ``status = false (not confirmed)``
         - Return the Subscriber/Email entity and a temporany Token
         
     **Send a confirmation email**
-    - [**EmailManager->sendConfirmationEmail()**] Send a confirmation email to the user with "special link" `temporany token` that allow him to confirm his subscription 
+    - [**EmailManager->sendConfirmationEmail()**] Send a confirmation email to the user with "special link" `temporany token + email address` that allow him to confirm the subscription 
     
     **Return**
-    - If the process is completed without problems, return a JSON response with the email address and some info on the current subscriber status (not confirmed by default)
+    - If the process is completed without problems, return a JSON response with the email address and some info
     
 **GET**
 
-- When a user click on the link received by email `GET /confirmEmail` he will be redirected on this route than need ``emailAddress`` and `temporany token``:
+- When a user click on the link received by email `GET /confirmEmail` he will be redirected on this route than need `emailAddress` and `temporany token`:
 
     **Validation**
     - [**EmailValidatorController->emailFormatValidation()**] Check email format validation   
         - Return an specific error message if the validation process return errors    
 
     **User Status Switch**
-    - [**SubscriberDbManager->confirmSubscriber()**] Check if the user exist in DB. If exist generate the real token and compare it with given token. If the token is the same, switch the confirmation status from false to true.
+    - [**SubscriberDbManager->confirmSubscriber()**] Check if the user exist in DB. If exist generate the `real token` and compare it with `given token`. If the tokens are equal, switch the `subscriber confirmation status` from false to true.
         - Return the current subscriber if the confirmation is switched to true
         - Return Exception if subscriber doesn't exist 
         - Return Excpetion if the real token is not the same of given token
@@ -95,4 +95,22 @@ Setup
 
 - Run this project by ```docker-compose up -d```
 
-- Run ``./vendor/bin/phpunit``
+- Insert a real valid email in `tests/Controller/MainTest.php` (ROW 9) `const REALEMAIL`
+
+- Run ``./vendor/bin/phpunit`` 
+
+    `testSimulateNewSubscriberRequest()`
+    - Generate a new subscriber in the DB
+    - Send confirmation email 
+    - Simulate a click on the confirmation email link
+    - Change status (NotConfirmet -> Confirmed) 
+    - Send another email where the user is informed that the confirmation process is completed
+    
+    `testSimulateNewSubscriberInvalidRequest()`
+    - Use a invalid email to check if the validation process is working
+    
+    `testSimulateAlreadySubscribedRequest()`
+    - Use the real email `self::REALEMAIL` to check if the user is already registered 
+    
+- *Remember to change the email at every test cycle*     
+ 

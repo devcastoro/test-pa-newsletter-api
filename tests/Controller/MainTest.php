@@ -8,6 +8,7 @@ class MainTest extends WebTestCase
 {
     const REALEMAIL = 'gabriele.castoro@gmail.com'; // change for every new test
     const INVALIDMAIL = '∆∆∆∆000∆0∆0∆@gmail.com';
+
     /**
      * Simulate a new subscriber request and confirmation
      *
@@ -40,7 +41,6 @@ class MainTest extends WebTestCase
      */
     public function testSimulateNewSubscriberInvalidRequest()
     {
-
         $client = static::createClient(array(
             'environment' => 'test',
         ),array('HTTPS' => true));
