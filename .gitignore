@@ -9,3 +9,11 @@ provisioned.lock
 /vendor/
 ###< symfony/framework-bundle ###
 .setup.sh
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+###< phpunit/phpunit ###
