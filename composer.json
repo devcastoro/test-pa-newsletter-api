@@ -10,6 +10,7 @@
     "friendsofsymfony/rest-bundle": "^2.4",
     "jms/serializer-bundle": "^2.4",
     "nelmio/cors-bundle": "^1.5",
+    "phpunit/phpunit": "^7.3",
     "symfony/console": "^4.0",
     "symfony/flex": "^1.0",
     "symfony/framework-bundle": "^4.0",
@@ -21,8 +22,10 @@
     "symfony/yaml": "^4.0"
   },
   "require-dev": {
+    "symfony/browser-kit": "^4.0",
     "symfony/dotenv": "^4.0",
-    "symfony/maker-bundle": "^1.7"
+    "symfony/maker-bundle": "^1.7",
+    "symfony/phpunit-bridge": "^4.0"
   },
   "config": {
     "preferred-install": {
