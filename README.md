@@ -95,4 +95,4 @@ Setup
 
 - Run this project by ```docker-compose up -d```
 
-
+- Run ``./vendor/bin/phpunit``

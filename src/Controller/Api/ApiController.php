@@ -45,13 +45,14 @@ class ApiController extends Controller {
             $this->emailManager->sendConfirmationEmail($userRecord["subscriber"]->getMail(),$userRecord["token"]);
 
             return $this->json([
-                "mail"   => $userRecord["subscriber"]->getMail(),
-                "status" => "NotConfirmedRegistration",
+                "mail"    => $userRecord["subscriber"]->getMail(),
+                "token"   => $userRecord["token"],
+                "status"  => "NotConfirmedRegistration",
             ],200);
 
         } catch (Exception $e) {
 
-            return $this->json(["Error" => $e->getMessage()],400);
+            return $this->json(["error" => $e->getMessage()],400);
         }
     }
 
@@ -86,7 +87,7 @@ class ApiController extends Controller {
 
         } catch (Exception $e) {
 
-            return $this->json(["Error" => $e->getMessage()],400);
+            return $this->json(["error" => $e->getMessage()],400);
         }
     }
 

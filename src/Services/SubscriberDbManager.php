@@ -53,13 +53,7 @@ class SubscriberDbManager {
         // get the subscriber
         $subscriber = $this->em->getRepository(Emails::class)->findOneBy(["mail" => $email]);
 
-        if (!$subscriber){
-            throw new Exception('This email address is not present in our database');
-        }
-
-        // check the token
-        $currentDateTime = $subscriber->getDate();
-        $realSubscriberToken = md5($currentDateTime->format('Y-m-d H:i:s').$email);
+        $realSubscriberToken = $this->getSubscriberTokenByEmail($email);
 
         if ($realSubscriberToken == $token) {
 
@@ -78,6 +72,27 @@ class SubscriberDbManager {
         else{
             throw new Exception('Your confirmation token is not correct');
         }
+    }
+
+    /**
+     * get Subscriber Token
+     *
+     * @return string
+     */
+    public function getSubscriberTokenByEmail($email)
+    {
+        // get the subscriber
+        $subscriber = $this->em->getRepository(Emails::class)->findOneBy(["mail" => $email]);
+
+        if (!$subscriber){
+            throw new Exception('This email address is not present in our database');
+        }
+
+        // check the token
+        $currentDateTime = $subscriber->getDate();
+        $realSubscriberToken = md5($currentDateTime->format('Y-m-d H:i:s').$email);
+
+        return $realSubscriberToken;
     }
 
 }
