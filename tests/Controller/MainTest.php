@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MainTest extends WebTestCase
 {
-    const REALEMAIL = 'gabriele.castoro@gmail.com'; // change for every new test
+    const REALEMAIL = 'xyz@gmail.com'; // change for every new test
     const INVALIDMAIL = '∆∆∆∆000∆0∆0∆@gmail.com';
 
     /**

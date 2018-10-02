@@ -95,6 +95,8 @@ Setup
 
 - Run this project by ```docker-compose up -d```
 
+- Populate ```phpunit.xml``` env variables 
+
 - Insert a real valid email in `tests/Controller/MainTest.php` (ROW 9) `const REALEMAIL`
 
 - Run ``./vendor/bin/phpunit`` 
